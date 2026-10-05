@@ -27,6 +27,15 @@ describe('Gilded Rose', () => {
     expect(items.map(item => item.quality)).toEqual([4, 6]);
   });
 
+  describe('quality already out of bounds (invalid input)', () => {
+    it('is left as is rather than corrected', () => {
+      expect(updateOnce('foo', 10, 60).quality).toBe(59);
+      expect(updateOnce('foo', 10, -5).quality).toBe(-5);
+      expect(updateOnce(AGED_BRIE, 10, 55).quality).toBe(55);
+      expect(updateOnce(BACKSTAGE, 5, 55).quality).toBe(55);
+    });
+  });
+
   describe('normal item', () => {
     it('decreases sellIn and quality by 1', () => {
       const item = updateOnce('foo', 10, 20);
