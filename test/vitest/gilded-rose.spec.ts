@@ -81,6 +81,25 @@ describe('Gilded Rose', () => {
     });
   });
 
+  describe('Conjured item', () => {
+    const CONJURED = 'Conjured Mana Cake';
+
+    it('degrades twice as fast as a normal item', () => {
+      const item = updateOnce(CONJURED, 10, 20);
+      expect(item.sellIn).toBe(9);
+      expect(item.quality).toBe(18);
+    });
+
+    it('degrades twice as fast as a normal item once expired', () => {
+      expect(updateOnce(CONJURED, 0, 20).quality).toBe(16);
+    });
+
+    it('never has a negative quality', () => {
+      expect(updateOnce(CONJURED, 10, 1).quality).toBe(0);
+      expect(updateOnce(CONJURED, 0, 3).quality).toBe(0);
+    });
+  });
+
   describe('Backstage passes', () => {
     it('increases by 1 when the concert is more than 10 days away', () => {
       const item = updateOnce(BACKSTAGE, 11, 20);

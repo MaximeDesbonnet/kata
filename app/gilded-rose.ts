@@ -13,6 +13,7 @@ export class Item {
 const AGED_BRIE = 'Aged Brie';
 const BACKSTAGE_PASSES = 'Backstage passes to a TAFKAL80ETC concert';
 const SULFURAS = 'Sulfuras, Hand of Ragnaros';
+const CONJURED_PREFIX = 'Conjured';
 
 const MIN_QUALITY = 0;
 const MAX_QUALITY = 50;
@@ -36,10 +37,16 @@ function isExpired(item: Item): boolean {
   return item.sellIn < 0;
 }
 
-const updateNormalItem: ItemRule = item => {
-  item.sellIn -= 1;
-  changeQuality(item, isExpired(item) ? -2 : -1);
-};
+function degradingBy(dailyLoss: number): ItemRule {
+  return item => {
+    item.sellIn -= 1;
+    changeQuality(item, isExpired(item) ? -2 * dailyLoss : -dailyLoss);
+  };
+}
+
+const updateNormalItem = degradingBy(1);
+
+const updateConjuredItem = degradingBy(2);
 
 const updateAgedBrie: ItemRule = item => {
   item.sellIn -= 1;
@@ -72,7 +79,7 @@ function ruleFor(item: Item): ItemRule {
     case SULFURAS:
       return updateSulfuras;
     default:
-      return updateNormalItem;
+      return item.name.startsWith(CONJURED_PREFIX) ? updateConjuredItem : updateNormalItem;
   }
 }
 
