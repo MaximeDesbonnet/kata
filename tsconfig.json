@@ -1,23 +1,23 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
+    "target": "es2022",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
     "strict": true,
     "noImplicitAny": false,
-    "sourceMap": true,
-    "baseUrl": "./",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "paths": {
-      "@/*": [
-        "app/*"
-      ]
-    },
     "skipLibCheck": true,
     "types": [
       "vitest/globals",
       "node"
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "./app/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules"
