@@ -1,57 +1,45 @@
 # Gilded Rose
 
-This is the Gilded Rose kata in TypeScript.
+Le kata [Gilded Rose](https://github.com/emilybache/GildedRose-Refactoring-Kata) en TypeScript : refactorer un code
+hérité sans en changer le comportement, puis ajouter les articles « Conjured ».
+Règles métier : [GildedRoseRequirements_fr.md](GildedRoseRequirements_fr.md).
 
-## Getting started
+## Démarrer
 
-Install dependencies
-
-```sh
-npm install
-```
-
-## Run the unit tests from the Command-Line
-
-There are two unit test frameworks to choose from, Jest and Mocha.
+Node 24 recommandé.
 
 ```sh
-npm run test:jest
+npm ci
+npm test                      # tests unitaires + golden master (Vitest)
+npm run typecheck             # vérification des types
+npm run test:coverage         # couverture
+npm run golden-master -- 10   # inventaire de référence sur 10 jours
 ```
 
-To run all tests in watch mode
+## Démarche
 
-```sh
-npm run test:jest:watch
-```
+L'historique des commits se lit dans l'ordre, chaque étape laisse les tests au vert :
 
-Mocha
+1. **Importer le code d'origine** tel quel, pour que chaque changement soit visible dans un diff.
+2. **Figer le comportement avant de toucher au code** : un test par règle de la spécification (bornes 0 et 50, date
+   dépassée, paliers des Backstage passes…) et un golden master de 30 jours en snapshot. Couverture : 100 % des
+   lignes et des branches.
+3. **Un seul outil de test** : le kata en livrait trois, dont les types se contredisaient (`tsc` échouait).
+4. **Refactorer par petits pas** : extraire la mise à jour d'un article, puis une règle par type d'article, choisie
+   d'après le nom. Les bornes de qualité sont centralisées dans `changeQuality`.
+5. **Ajouter Conjured en TDD** : tests vus rouges, puis le code. Le snapshot du golden master change seulement sur
+   les lignes du « Conjured Mana Cake ».
+6. **Outillage à jour et CI** : TypeScript 6, Vitest 5, `package-lock.json` versionné, aucune vulnérabilité
+   connue ; GitHub Actions relance types, tests, couverture et audit à chaque PR.
 
-```sh
-npm run test:mocha
-```
+## Choix et limites
 
-
-## Run the TextTest fixture from the Command-Line
-
-_You may need to install `ts-node`_
-
-```sh
-npx ts-node test/golden-master-text-test.ts
-```
-
-Or with number of days as args:
-```sh
-npx ts-node test/golden-master-text-test.ts 10
-```
-
-You should make sure the command shown above works when you execute it in a terminal before trying to use TextTest (see below).
-
-
-## Run the TextTest approval test that comes with this project
-
-There are instructions in the [TextTest Readme](../texttests/README.md) for setting up TextTest. You will need to specify the Python executable and interpreter in [config.gr](../texttests/config.gr). Uncomment these lines:
-
-    executable:${TEXTTEST_HOME}/python/texttest_fixture.py
-    interpreter:python
-
-
+- **La classe `Item` n'est pas touchée**, comme l'exige l'énoncé (le gobelin).
+- **Une qualité déjà hors bornes n'est pas corrigée** (60 reste au-dessus de 50 en baissant d'un point). C'est le
+  comportement du code d'origine, découvert pendant le refactoring et figé par un test : le changer est une décision
+  métier, pas un refactoring.
+- **Un article est Conjured si son nom commence par « Conjured »**. Un « Conjured Aged Brie » n'est pas prévu :
+  l'énoncé ne dit pas comment combiner les règles.
+- **Des fonctions plutôt que des classes** pour les règles : chaque règle tient en quelques lignes, une hiérarchie de
+  classes n'apporterait rien ici. Si les règles se multipliaient, l'aiguillage `ruleFor` deviendrait une table
+  nom → règle.
