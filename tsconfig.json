@@ -12,7 +12,12 @@
       "@/*": [
         "app/*"
       ]
-    }
+    },
+    "skipLibCheck": true,
+    "types": [
+      "vitest/globals",
+      "node"
+    ]
   },
   "exclude": [
     "node_modules"
