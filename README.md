@@ -6,8 +6,10 @@ Règles métier : [GildedRoseRequirements_fr.md](GildedRoseRequirements_fr.md).
 
 ## Démarrer
 
+Node 24 recommandé.
+
 ```sh
-npm install
+npm ci
 npm test                      # tests unitaires + golden master (Vitest)
 npm run typecheck             # vérification des types
 npm run test:coverage         # couverture
@@ -27,6 +29,8 @@ L'historique des commits se lit dans l'ordre, chaque étape laisse les tests au 
    d'après le nom. Les bornes de qualité sont centralisées dans `changeQuality`.
 5. **Ajouter Conjured en TDD** : tests vus rouges, puis le code. Le snapshot du golden master change seulement sur
    les lignes du « Conjured Mana Cake ».
+6. **Outillage à jour et CI** : TypeScript 6, Vitest 5, `package-lock.json` versionné, aucune vulnérabilité
+   connue ; GitHub Actions relance types, tests, couverture et audit à chaque PR.
 
 ## Choix et limites
 
