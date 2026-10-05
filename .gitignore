@@ -1,0 +1,16 @@
+
+# kit SDD : état local des garde-fous (revues, liste blanche des secrets)
+.kit-sdd/
+.claude/settings.local.json
+CLAUDE.local.md
+.DS_Store
+.idea
+node_modules
+typings
+app/**/*.js
+app/**/*.js.map
+test/**/*.js
+test/**/*.js.map
+coverage
+.nyc_output
+package-lock.json
